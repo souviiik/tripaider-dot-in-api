@@ -94,6 +94,7 @@ class User{
             WHERE
                 username='".htmlspecialchars($this->username)."'";
 		// prepare query statement
+		echo $query;
 		$stmt = $this->conn->prepare($query);
 		;
 		// execute query
