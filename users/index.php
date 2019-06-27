@@ -24,6 +24,7 @@ use PHPMailer\PHPMailer\Exception;
 
 $key = "1234789";
 $iss = "http://tripaider.in";
+$dvl = "http://dvl.tripaider.in";
 $aud = "http://tripaider.in";
 $iat = 1356999524;
 $nbf = 1357000000;
@@ -158,7 +159,8 @@ switch($request_method) {
 							$mail->Subject = "Welcome to tripaider.in!"; 
 							$mail_body = "
 								<p>Hi ".$data->firstname.",</p>
-								<p>You have successfully created your tripaider.in account with the following email address: ".$data->username.". In order to access all areas of the site you must activate your account by clicking <a href=\"".$iss."/verification/".$data->username."\">here</a>.</p><br/>
+								<p>You have successfully created your tripaider.in account with the following email address: ".$data->username.". In order to access all areas of the site you must activate your account by clicking below button:</p>
+								<a style='background: #007bff; color: #fff; text-decoration: none; padding: 10px 25px; border-radius: 5px; margin: 10px auto;' href=\"".$dvl."/verification/".$data->username."\">ACTIVATE YOUR ACCOUNT</a>
 								<p>If you have any queries or comments just email support@tripaider.in. We would love to hear from you!</p>
 
 								<p>Cheers,<br />Team tripaider.in</p>
@@ -228,18 +230,9 @@ switch($request_method) {
 					$mail->Subject = "Account Verified Successfully"; 
 					$mail_body = "
 						<p>Hi ".$userdata['firstname'].",</p><br/>
-						<p>Congratulations! Your tripaider.in account is verified and live.<p> 
-						<p>You can start investing in 5000+ mutual funds Groww. Try making your first investment today by clicking below!.</p><br/>
-
-						<p>Click <a href=\"".$iss."\">here</a></p>
-
-						<p>Need help with Investing? We got you covered!
-
-						<p>Get started with our Beginner's guide to mutual funds.</p>
-						<p>Need help choosing the right funds? Try Assistant.</p>
-						<p>Have external investments? Track them on Groww.</p>
+						<p>Congratulations! Your tripaider.in account is verified and live.<p>
 						
-						<p>Tripaider.in team</p>
+						<p>Team tripaider.in</p>
 					";	
 
 					$mail->Body = $mail_body;
