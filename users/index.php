@@ -229,9 +229,8 @@ switch($request_method) {
 					$mail->isHTML(true); 
 					$mail->Subject = "Account Verified Successfully"; 
 					$mail_body = "
-						<p>Hi ".$userdata['firstname'].",</p><br/>
-						<p>Congratulations! Your tripaider.in account is verified and live.<p>
-						
+						<p>Hi ".$userdata['firstname'].",</p>
+						<p>Congratulations! Your tripaider.in account is verified and live.<p><br/>
 						<p>Team tripaider.in</p>
 					";	
 
