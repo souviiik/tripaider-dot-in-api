@@ -74,7 +74,7 @@ class User{
     // login user
     function login(){
 		$query = "SELECT
-                `id`, `username`,`password`, `firstname`,`lastname`,`mobile`,status
+                `id`, `username`,`password`, `firstname`,`lastname`, `address`, `country`, `state`, `pincode`, `created`, `mobile`,status
             FROM
                 " . $this->table_name . " 
             WHERE
@@ -94,7 +94,6 @@ class User{
             WHERE
                 username='".htmlspecialchars($this->username)."'";
 		// prepare query statement
-		echo $query;
 		$stmt = $this->conn->prepare($query);
 		;
 		// execute query
@@ -108,7 +107,7 @@ class User{
 	
 	function getUser(){
 		$query = "SELECT
-                `id`, `username`,`password`, `firstname`,`lastname`,`mobile`
+                `id`, `username`,`password`, `firstname`,`lastname`,`mobile`,`status`
             FROM
                 " . $this->table_name . " 
             WHERE
@@ -123,7 +122,7 @@ class User{
 	function resetpassword(){
 		$query = "UPDATE              
                 " . $this->table_name . " 
-			SET password='".htmlspecialchars($this->password)."'
+			SET password='".$this->password."'
             WHERE
                 username='".htmlspecialchars($this->username)."'";
 		// prepare query statement

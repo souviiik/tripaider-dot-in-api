@@ -88,7 +88,13 @@ switch($request_method) {
 								   "id" => $userdata['id'],
 								   "firstname" =>$userdata['firstname'],
 								   "lastname" => $userdata['lastname'],
-								   "username" => $userdata['username']
+								   "username" => $userdata['username'],								   
+								   "address" =>$userdata['address'],
+								   "country" => $userdata['country'],
+								   "state" => $userdata['state'],								   
+								   "pincode" =>$userdata['pincode'],
+								   "created" => $userdata['created'],
+								   "mobile" => $userdata['mobile']
 							   )
 							);					 
 												 
@@ -103,7 +109,13 @@ switch($request_method) {
 								   "id" => $userdata['id'],
 								   "firstname" =>$userdata['firstname'],
 								   "lastname" => $userdata['lastname'],
-								   "username" => $userdata['username']
+								   "username" => $userdata['username'],								   
+								   "address" =>$userdata['address'],
+								   "country" => $userdata['country'],
+								   "state" => $userdata['state'],								   
+								   "pincode" =>$userdata['pincode'],
+								   "created" => $userdata['created'],
+								   "mobile" => $userdata['mobile']
 							   ),
 								"token" =>$jwt,
 								"error" => false,
@@ -143,12 +155,6 @@ switch($request_method) {
 						));
 					} else {
 						if($user->signup()){
-
-							http_response_code(201);
-							echo json_encode(array(
-								"message" => "Record Saved successfully","data"=> "","error"=> false,"code"=>"105","status"=> 201
-							));
-							
 							// Instantiation and passing `true` enables exceptions
 							$mail = new PHPMailer(true); //From email address and name 
 							$mail->From = "admin@tripaider.in"; 
@@ -159,16 +165,20 @@ switch($request_method) {
 							$mail->Subject = "Welcome to tripaider.in!"; 
 							$mail_body = "
 								<p>Hi ".$data->firstname.",</p>
-								<p>You have successfully created your tripaider.in account with the following email address: ".$data->username.". In order to access all areas of the site you must activate your account by clicking below button:</p>
-								<a style='background: #007bff; color: #fff; text-decoration: none; padding: 10px 25px; border-radius: 5px; margin: 10px auto;' href=\"".$dvl."/verification/".$data->username."\">ACTIVATE YOUR ACCOUNT</a>
-								<p>If you have any queries or comments just email support@tripaider.in. We would love to hear from you!</p>
-
-								<p>Cheers,<br />Team tripaider.in</p>
+								<p>You have successfully created your tripaider account with the following email address: ".$data->username.". In order to access all areas of the site you must activate your account by clicking below button:</p>
+								<p><a style='background: #007bff; color: #fff; text-decoration: none; padding: 10px 25px; border-radius: 5px; margin: 10px auto;' href=\"".$dvl."/verification/".$data->username."\">ACTIVATE YOUR ACCOUNT</a></p>
+								<p>If you have any queries or comments just email support@tripaider.in. We would love to hear from you!</p><br />
+								<p>Thank you for visiting tripaider's website.<br/>
+								The TRIPAIDER Web Team</p>
 							";	
 
 							$mail->Body = $mail_body;
 							//$mail->send();				
 							
+							http_response_code(201);
+							echo json_encode(array(
+								"message" => "Record saved successfully","data"=> "","error"=> false,"code"=>"105","status"=> 201
+							));
 							
 							
 							  //Server settings
@@ -181,12 +191,7 @@ switch($request_method) {
 							$mail->SMTPSecure = 'tls';                                  // Enable TLS encryption, `ssl` also accepted
 							$mail->Port       = 587;                                    // TCP port to connect to*/
 	
-							try {
 								$mail->send();
-							}catch(\Exception $e){
-								
-							};
-							
 						} else{
 							http_response_code(400);
 							echo json_encode(array(
@@ -231,20 +236,17 @@ switch($request_method) {
 					$mail_body = "
 						<p>Hi ".$userdata['firstname'].",</p>
 						<p>Congratulations! Your tripaider.in account is verified and live.<p><br/>
-						<p>Team tripaider.in</p>
+						<p>Thank you for visiting tripaider's website.<br/>
+						The TRIPAIDER Web Team</p>
 					";	
 
 					$mail->Body = $mail_body;
-					try {
 						$mail->send();
-					}catch(\Exception $e){
-						
-					};
 					
 					
 				} else {
 					http_response_code(400);
-					echo json_encode(array("message" => "Verification Error","data"=> "","error"=> true,"code"=>"111","status"=> 400));
+					echo json_encode(array("message" => "Verification error","data"=> "","error"=> true,"code"=>"111","status"=> 400));
 				}
 				
 				
@@ -279,20 +281,15 @@ switch($request_method) {
 					$mail->isHTML(true); 
 					$mail->Subject = "Reset Password"; 
 					$mail_body = "
-						<p>Hi ".$userdata['firstname'].",</p><br/>
-						
-						<p>Click <a href=\"".$iss."/resetpassword/".$data->username."\">here</a> tp reset your password</p>
-
-												
-						<p>Tripaider.in team</p>
+					<p>Hello ".$userdata['firstname'].",</p>
+					<p>We have received your request to update the password to your account on the tripaider website. If you made this request, please click on the link below to reset your password</p>					
+					<p><a href=\"".$dvl."/reset-password/".$data->username."\">Reset Password Page</a></p><br />
+					<p>Thank you for visiting tripaider's website.<br/>
+					The TRIPAIDER Web Team</p>
 					";	
 
 					$mail->Body = $mail_body;
-					try {
 						$mail->send();
-					}catch(\Exception $e){
-						
-					};
 					
 				}
 				
@@ -301,7 +298,6 @@ switch($request_method) {
 				http_response_code(404);
 				echo "Not Found";
 			}
-			break;			
 		
 		case 'PUT':
 			if(!empty($uri[3]) && $uri[3] === 'resetpassword') {
@@ -372,7 +368,7 @@ switch($request_method) {
 				$data = json_decode(file_get_contents("php://input"));	
 				$user->username = $decoded->data->username;	
 				$old_password = md5($data->old_password);
-				$user->password = md5($data->new_password);
+				$new_password = md5($data->new_password);
 				
 				$stmt = $user->getUser();					
 				$num = $stmt->rowCount();
@@ -414,12 +410,12 @@ switch($request_method) {
 				echo "Not Found";
 			}
 			break;
-		
 		default:
 			// Invalid Request Method
 			//header("HTTP/1.0 405 Method Not Allowed");
 			http_response_code(404);
-			echo "Not Found";
+			echo "Not Found1";
+			var_dump(encrypt_decrypt("admin","encrypt"));
 			break;
 }
 ?>
