@@ -191,7 +191,13 @@ switch($request_method) {
 							$mail->SMTPSecure = 'tls';                                  // Enable TLS encryption, `ssl` also accepted
 							$mail->Port       = 587;                                    // TCP port to connect to*/
 	
+							try {
 								$mail->send();
+							}catch(\Exception $e){
+								
+							};
+							
+							
 						} else{
 							http_response_code(400);
 							echo json_encode(array(
@@ -241,7 +247,12 @@ switch($request_method) {
 					";	
 
 					$mail->Body = $mail_body;
+					
+					try {
 						$mail->send();
+					}catch(\Exception $e){
+						
+					};
 					
 					
 				} else {
@@ -266,11 +277,13 @@ switch($request_method) {
 				} else {
 					
 					http_response_code(200);
-					echo json_encode(array(
-						"message" => "Mail send successfully","data"=> "","error"=> false,"code"=>"121","status"=> 200
-					));					
+					$userdata = $stmt->fetch(PDO::FETCH_ASSOC);	
+
+					$encode = md5($userdata['username']."_".$key);
 					
-					$userdata = $stmt->fetch(PDO::FETCH_ASSOC);		
+					echo json_encode(array(
+						"message" => "Mail send successfully","data"=> $encode,"error"=> false,"code"=>"121","status"=> 200
+					));					
 					
 					
 					$mail = new PHPMailer(true); //From email address and name 
@@ -283,13 +296,17 @@ switch($request_method) {
 					$mail_body = "
 					<p>Hello ".$userdata['firstname'].",</p>
 					<p>We have received your request to update the password to your account on the tripaider website. If you made this request, please click on the link below to reset your password</p>					
-					<p><a href=\"".$dvl."/reset-password/".$data->username."\">Reset Password Page</a></p><br />
+					<p><a href=\"".$dvl."/reset-password/".$encode."\">Reset Password Page</a></p><br />
 					<p>Thank you for visiting tripaider's website.<br/>
 					The TRIPAIDER Web Team</p>
 					";	
 
 					$mail->Body = $mail_body;
+					try {
 						$mail->send();
+					}catch(\Exception $e){
+						
+					};
 					
 				}
 				
@@ -302,11 +319,12 @@ switch($request_method) {
 		case 'PUT':
 			if(!empty($uri[3]) && $uri[3] === 'resetpassword') {
 				
+				$value = $uri[4];
 				$data = json_decode(file_get_contents("php://input"));	
-				$user->username = $data->username;
-				$user->password = md5($data->password);
 				
-				$stmt = $user->getUser();					
+				//$user->username = $data->username;
+				$user->password = md5($data->password);
+				$stmt = $user->getUserMD5($value,$key);					
 				$num = $stmt->rowCount();
 				
 				if($num === 0){
@@ -382,6 +400,7 @@ switch($request_method) {
 						
 				} else {
 					$userdata = $stmt->fetch(PDO::FETCH_ASSOC);	
+					$user->password = $new_password;
 					
 					if( md5($data->old_password) != $userdata['password'] ) {
 						http_response_code(401);

@@ -119,6 +119,20 @@ class User{
 		return $stmt;
     }
 	
+	function getUserMD5($value,$key){
+		echo $query = "SELECT
+                `id`, `username`,`password`, `firstname`,`lastname`,`mobile`,`status`
+            FROM
+                " . $this->table_name . " 
+            WHERE
+                md5(CONCAT(username,'_','".$key."'))='".htmlspecialchars($value)."'";
+		// prepare query statement
+		$stmt = $this->conn->prepare($query);
+		// execute query
+		$stmt->execute();
+		return $stmt;
+    }
+	
 	function resetpassword(){
 		$query = "UPDATE              
                 " . $this->table_name . " 
