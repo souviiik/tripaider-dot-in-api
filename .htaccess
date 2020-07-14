@@ -1,0 +1,10 @@
+# Cors
+Header always set Access-Control-Allow-Origin "*"
+Header always set Access-Control-Allow-Headers "Origin, X-Requested-With, Content-Type, Authorization, Access-Control-Allow-Origin, Access-Control-Allow-Credentials, Access-Control-Allow-method"
+Header always set Access-Control-Allow-Methods "PUT, GET, POST, DELETE, OPTIONS"
+Header always set Access-Control-Max-Age 3600
+
+RewriteEngine On # Turn on the rewriting engine
+RewriteRule ^users users/index.php [NC,L]
+RewriteRule ^users/([A-z0-9]+)/?$ users/index.php?id=$1 [NC,L]
+RewriteRule ^users/([A-z0-9]+)/?$/?$ users/index.php?id=$1&email=$2 [NC,L]
