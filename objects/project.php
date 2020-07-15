@@ -7,15 +7,6 @@ class Project
   private $table_name = "projects";
 
   // object properties
-  /*
-  Choose a name for your project
-Start city
-Destinantion
-Start date
-For how many days
-How many people
-Tell us more about your trip
-   */
   public $id;
   public $projectName;
   public $startCity;
@@ -47,7 +38,8 @@ Tell us more about your trip
 					startDate=:startDate,					
 					numDays=:numDays,
           numPeople=:numPeople,
-          desc=:desc";
+          desc=:desc,
+					created=:created";
     // prepare query
     $stmt = $this->conn->prepare($query);
 

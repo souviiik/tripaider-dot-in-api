@@ -27,7 +27,6 @@ class User
   // signup user
   function signup()
   {
-
     if ($this->isAlreadyExist()) {
       return false;
     }
