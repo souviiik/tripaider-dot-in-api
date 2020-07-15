@@ -10,25 +10,6 @@ ini_set('display_errors', 0);
 include_once '../config/database.php';
 include_once '../objects/project.php';
 
-// include_once '../libs/php-jwt/src/BeforeValidException.php';
-// include_once '../libs/php-jwt/src/ExpiredException.php';
-// include_once '../libs/php-jwt/src/SignatureInvalidException.php';
-// include_once '../libs/php-jwt/src/JWT.php';
-// use \Firebase\JWT\JWT;
-
-// require_once '../libs/PHPMailer/src/Exception.php';
-// require_once '../libs/PHPMailer/src/PHPMailer.php';
-// require_once '../libs/PHPMailer/src/SMTP.php';
-// use PHPMailer\PHPMailer\PHPMailer;
-// use PHPMailer\PHPMailer\Exception;
-
-$key = "1234789";
-$iss = "http://tripaider.in";
-$dvl = "http://dvl.tripaider.in";
-$aud = "http://tripaider.in";
-$iat = 1356999524;
-$nbf = 1357000000;
-
 // instantiate database and product object
 $database = new Database();
 $db = $database->getConnection();
@@ -55,7 +36,7 @@ switch ($request_method) {
         $project->numPeople = $data->numPeople;
         $project->desc = $data->desc;
 
-        if ($project->saveProject()) {
+        if ($project->saveproject()) {
         } else {
           http_response_code(400);
           echo json_encode(array(

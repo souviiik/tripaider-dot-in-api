@@ -26,7 +26,7 @@ class Project
   // INSERT, UPDATE, DELETE, GET_ALL, GET_ONE
 
   // signup user
-  function saveProject()
+  function saveproject()
   {
     // query to insert record
     $query = "INSERT INTO
